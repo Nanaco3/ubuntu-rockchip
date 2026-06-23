@@ -29,22 +29,17 @@ cd linux-rockchip
 git checkout "${KERNEL_BRANCH}"
 
 # ==========================================
-# KernelSUの組み込み処理（追記ここから）
+# KernelSUの組み込み処理
 # ==========================================
 # 1. KernelSUのソースをカーネルツリーに統合
 curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
 
-# 2. .config ファイルへ設定を追記
-# （ビルドプロセス内で後から作成される可能性があるため、ここでダミーのconfigを作るか、
-# 既存のconfigファイルの末尾に設定を追記する）
-echo "CONFIG_KSU=y" >> .config
-echo "CONFIG_KALLSYMS=y" >> .config
-echo "CONFIG_KALLSYMS_ALL=y" >> .config
+# 2. Debianビルド用の共通コンフィグファイル群へ設定を追記
+# （ビルド時にこれらのファイルが結合されて最終的な .config になるため、ここに追記する）
+echo "CONFIG_KSU=y" >> debian.rockchip/config/config.common.ubuntu
+echo "CONFIG_KALLSYMS=y" >> debian.rockchip/config/config.common.ubuntu
+echo "CONFIG_KALLSYMS_ALL=y" >> debian.rockchip/config/config.common.ubuntu
 # ==========================================
-# （追記ここまで）
-
-# shellcheck disable=SC2046
-export $(dpkg-architecture -aarm64)
 
 # shellcheck disable=SC2046
 export $(dpkg-architecture -aarm64)
