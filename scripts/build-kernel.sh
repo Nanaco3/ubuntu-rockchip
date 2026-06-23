@@ -37,7 +37,7 @@ curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh
 # 2. KernelSUが勝手に「モジュール(M)」化されるのを防ぐ（強制組み込み化）
 sed -i 's/tristate/bool/g' drivers/kernelsu/Kconfig
 
-# 3. 【今回追加】存在しない関数（ext4_unregister_sysfs）の呼び出しをソースコードから削除
+# 3. KSUが要求している存在しない関数（ext4_unregister_sysfs）の呼び出しをソースコードから削除
 sed -i '/ext4_unregister_sysfs/d' drivers/kernelsu/runtime/boot_event.c
 
 # 4. Debianビルド用の共通コンフィグファイル群へ設定を追記
