@@ -27,6 +27,28 @@ fi
 cd linux-rockchip
 git checkout "${KERNEL_BRANCH}"
 
+# 変更後
+cd linux-rockchip
+git checkout "${KERNEL_BRANCH}"
+
+# ==========================================
+# KernelSUの組み込み処理（追記ここから）
+# ==========================================
+# 1. KernelSUのソースをカーネルツリーに統合
+curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
+
+# 2. .config ファイルへ設定を追記
+# （ビルドプロセス内で後から作成される可能性があるため、ここでダミーのconfigを作るか、
+# 既存のconfigファイルの末尾に設定を追記する）
+echo "CONFIG_KSU=y" >> .config
+echo "CONFIG_KALLSYMS=y" >> .config
+echo "CONFIG_KALLSYMS_ALL=y" >> .config
+# ==========================================
+# （追記ここまで）
+
+# shellcheck disable=SC2046
+export $(dpkg-architecture -aarm64)
+
 # shellcheck disable=SC2046
 export $(dpkg-architecture -aarm64)
 export CROSS_COMPILE=aarch64-linux-gnu-
