@@ -34,8 +34,10 @@ git checkout "${KERNEL_BRANCH}"
 # 1. KernelSUのソースをカーネルツリーに統合
 curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
 
-# 2. Debianビルド用の共通コンフィグファイル群へ設定を追記
-# （ビルド時にこれらのファイルが結合されて最終的な .config になるため、ここに追記する）
+# 2. 【追加】KernelSUが勝手に「モジュール(M)」化されるのを防ぐ（強制組み込み化）
+sed -i 's/tristate/bool/g' drivers/kernelsu/Kconfig
+
+# 3. Debianビルド用の共通コンフィグファイル群へ設定を追記
 echo "CONFIG_KSU=y" >> debian.rockchip/config/config.common.ubuntu
 echo "CONFIG_KALLSYMS=y" >> debian.rockchip/config/config.common.ubuntu
 echo "CONFIG_KALLSYMS_ALL=y" >> debian.rockchip/config/config.common.ubuntu
